@@ -54,8 +54,10 @@ for 5 for1 {
 var i = 0
 var numcheck = 5
 
+&& coment
+
 while while1 {
-    wait 1
+    wait 0.5
     num increment > i
     put " number: "
     put i
@@ -63,3 +65,21 @@ while while1 {
         stop
     } cn
 } while1
+
+sys " echo hello world! "
+
+var cmd = " echo aaa "
+
+sys cmd
+
+var echo = " echo "
+var msg = " hello haha "
+
+joinvar msg >> echo : finalcmd
+
+puts " final command: "
+puts space
+puts finalcmd
+puts newline
+
+sys finalcmd
