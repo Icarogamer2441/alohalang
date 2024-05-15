@@ -1,6 +1,7 @@
 import sys
 import time
 import subprocess as sb
+from random import randint
 
 functions = {}
 variables = {}
@@ -155,8 +156,36 @@ def interpret(code):
                     else:
                         varname = tokens[1]
                         print(variables.get(varname), end="")
+                elif token == "input":
+                    inputtype = tokens[1]
+                    if inputtype == "int":
+                        varname = tokens[2]
+                        variables[varname] = int(input())
+                    elif inputtype == "float":
+                        varname = tokens[2]
+                        variables[varname] = float(input())
+                    elif inputtype == "string":
+                        varname = tokens[2]
+                        variables[varname] = input()
+                    else:
+                        print(f"Error at line: {linenum}. Illegal token: {tokens[inputtype]}")
+                        break
+                elif token == "randnum":
+                    num1 = tokens[1]
+                    if tokens[2] == ":":
+                        num2 = tokens[3]
+                        if tokens[4] == ">>":
+                            varname = tokens[5]
+                            variables[varname] = randint(int(num1),int(num2))
+                        else:
+                            print(f"Error at line: {linenum}. Illegal token: {tokens[4]}")
+                            break
+                    else:
+                        print(f"Error at line: {linenum}. Illegal token: {tokens[2]}")
+                        break
                 else:
                     print(f"Error at line: {linenum}. Illegal token: {token}")
+                    break
 
             if in_func:
                 if token == "}" and tokens[1] == funcname:
@@ -220,7 +249,7 @@ def interpret(code):
                     lineslist.append(" ".join(tokens))
 
 if __name__ == "__main__":
-    version = "1.1.0"
+    version = "1.2.0"
     if len(sys.argv) == 1:
         print(f"usage: {sys.argv[0]} <command>")
         print("commands:")
