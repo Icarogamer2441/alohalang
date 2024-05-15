@@ -2,6 +2,15 @@ var text = " string var "
 var integer = 10
 var floating = 10.50
 
+
+puts " say a message > "
+puts space
+
+&& you can use string, int and float
+input string msg
+
+put msg
+
 put text
 put integer
 put floating
@@ -83,3 +92,16 @@ puts finalcmd
 puts newline
 
 sys finalcmd
+
+randnum 1 : 10 >> randomnumber
+
+puts " say a number in 1 to 10 > "
+puts space
+input int >> inputnumber
+
+if inputnumber == randomnumber ifyes {
+    put " Correct number! "
+} ifyes
+if inputnumber != randomnumber ifnot {
+    put " Incorrect num! "
+} ifnot
