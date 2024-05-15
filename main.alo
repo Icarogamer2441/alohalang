@@ -1,0 +1,65 @@
+var text = " string var "
+var integer = 10
+var floating = 10.50
+
+put text
+put integer
+put floating
+
+put " hello world! "
+
+fnc func1 {
+    var text2 = " OMG "
+    put text2
+} func1
+
+call func1
+
+fnc func2 {
+    var n1 = 10
+    var n2 = 10
+    fnc check {
+        if n1 == n2 if1 {
+            put " n1 == n2 "
+        } if1
+        if n1 != n2 if2 {
+            put " n1 != n2 "
+        } if2
+        if n1 >= n2 if3 {
+            put " n1 >= n2 "
+        } if3
+        if n1 <= n2 if4 {
+            put " n1 <= n2 "
+        } if4
+        if n1 > n2 if5 {
+            put " n1 > n2 "
+        } if5
+        if n1 < n2 if6 {
+            put " n1 < n2 "
+        } if6
+    } check
+    call check
+} func2
+
+call func2
+
+var i = 0
+var increment = 1
+
+for 5 for1 {
+    num increment > i
+    put i
+} for1
+
+var i = 0
+var numcheck = 5
+
+while while1 {
+    wait 1
+    num increment > i
+    put " number: "
+    put i
+    if i >= numcheck cn {
+        stop
+    } cn
+} while1
