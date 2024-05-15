@@ -1,5 +1,6 @@
 import sys
 import time
+import subprocess as sb
 
 functions = {}
 variables = {}
@@ -42,24 +43,25 @@ def interpret(code):
                     varname = tokens[1]
                     if tokens[2] == "=":
                         value = tokens[3]
-                        if tokens[3] == "\"":
+                        if value == "\"":
                             if tokens[-1] == "\"":
                                 string = tokens[4:len(tokens) - 1]
                                 variables[varname] = " ".join(string)
                         else:
                             try:
-                                floating = float(tokens[3])
+                                floating = float(value)
                                 variables[varname] = floating
                             except ValueError:
                                 pass
 
                             try:
-                                integer = int(tokens[3])
+                                integer = int(value)
                                 variables[varname] = integer
                             except ValueError:
                                 pass
                     else:
                         print(f"Error at line: {linenum}. Illegal token: {tokens[2]}")
+                        break
                 elif token == "fnc":
                     funcname = tokens[1]
                     if tokens[2] == "{":
@@ -67,6 +69,7 @@ def interpret(code):
                         lineslist = []
                     else:
                         print(f"Error at line: {linenum}. Illegal token: {tokens[2]}")
+                        break
                 elif token == "call":
                     name = tokens[1]
                     interpret(functions.get(name))
@@ -82,6 +85,7 @@ def interpret(code):
                         lineslist = []
                     else:
                         print(f"Error at line: {linenum}. Illegal token: {tokens[5]}")
+                        break
                 elif token == "for":
                     times = tokens[1]
                     forname = tokens[2]
@@ -90,6 +94,7 @@ def interpret(code):
                         lineslist = []
                     else:
                         print(f"Error at line: {linenum}. Illegal token: {tokens[3]}")
+                        break
                 elif token == "num":
                     varname11 = tokens[1]
                     if tokens[2] == ">":
@@ -97,6 +102,7 @@ def interpret(code):
                         variables[varname22] += variables.get(varname11)
                     else:
                         print(f"Error at line: {linenum}. Illegal token: {tokens[2]}")
+                        break
                 elif token == "while":
                     whilename = tokens[1]
                     if tokens[2] == "{":
@@ -104,18 +110,53 @@ def interpret(code):
                         lineslist = []
                     else:
                         print(f"Error at line: {linenum}. Illegal token: {tokens[2]}")
+                        break
                 elif token == "stop":
                     running_while["TrueOrFalse"] = False
                 elif token == "wait":
                     waittime = tokens[1]
-                    time.sleep(int(waittime))
+                    time.sleep(float(waittime))
                 elif token == "#import":
                     file = tokens[1]
                     with open(file + ".alo", "r") as fi:
                         content = fi.read()
                     interpret(content)
+                elif token == "sys":
+                    if tokens[1] == "\"":
+                        if tokens[-1] == "\"":
+                            command = tokens[2:len(tokens) - 1]
+                            finalcmd = " ".join(command)
+                            sb.run(finalcmd, shell=True)
+                        else:
+                            print(f"Error at line: {linenum}. Illegal token: {tokens[-1]}")
+                            break
+                    else:
+                        varname = tokens[1]
+                        sb.run(variables.get(varname), shell=True)
+                elif token == "joinvar":
+                    varname11 = tokens[1]
+                    if tokens[2] == ">>":
+                        varname22 = tokens[3]
+                        if tokens[4] == ":":
+                            varname33 = tokens[5]
+                            variables[varname33] = variables.get(varname22) + " " + variables.get(varname11)
+                    else:
+                        print(f"Error at line: {linenum}. Illegal token: {tokens[2]}")
+                        break
+                elif token == "puts":
+                    if tokens[1] == "\"":
+                        if tokens[-1] == "\"":
+                            msg = tokens[2:len(tokens) - 1]
+                            print(" ".join(msg), end="")
+                    elif tokens[1] == "space":
+                        print(" ", end="")
+                    elif tokens[1] == "newline":
+                        print("")
+                    else:
+                        varname = tokens[1]
+                        print(variables.get(varname), end="")
                 else:
-                    print("Error")
+                    print(f"Error at line: {linenum}. Illegal token: {token}")
 
             if in_func:
                 if token == "}" and tokens[1] == funcname:
@@ -179,7 +220,7 @@ def interpret(code):
                     lineslist.append(" ".join(tokens))
 
 if __name__ == "__main__":
-    version = "1.0.0"
+    version = "1.1.0"
     if len(sys.argv) == 1:
         print(f"usage: {sys.argv[0]} <command>")
         print("commands:")
